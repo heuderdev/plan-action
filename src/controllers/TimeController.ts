@@ -42,4 +42,14 @@ export class TimeController {
     }
 
 
+    static async getById(request: Request, response: Response) {
+        try {
+            const id = Number(request.params.id)
+            const times = await TimeService.getById({ id })
+            return response.json(times)
+        } catch (error) {
+            return response.status(400).json(error)
+        }
+    }
+
 }
