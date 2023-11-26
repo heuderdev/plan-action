@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  username    String        @unique
+  password    String
+  email       String        @unique
+  sector      String
+  permission  String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Publication Publication[]
+
+  @@index([id, username])
+  @@map("users")
+}
+
+model Time {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Sector    Sector[]
+
+  @@index([id])
+  @@map("times")
+}
+
+model Sector {
+  id          Int           @id @default(autoincrement())
+  name        String
+  time        Time          @relation(fields: [timeId], references: [id])
+  timeId      Int
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Publication Publication[]
+
+  @@index([id])
+  @@map("sectors")
+}
+
+model Publication {
+  id          Int      @id @default(autoincrement())
+  title       String
+  video       String   @db.LongText
+  description String   @db.LongText
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  sector      Sector   @relation(fields: [sectorId], references: [id])
+  sectorId    Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([id])
+  @@map("publications")
+}
