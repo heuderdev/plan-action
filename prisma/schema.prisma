@@ -47,16 +47,18 @@ model Sector {
 }
 
 model Publication {
-  id          Int      @id @default(autoincrement())
-  title       String
-  video       String?   @db.LongText
-  description String   @db.LongText
-  user        User     @relation(fields: [userId], references: [id])
-  userId      Int
-  sector      Sector   @relation(fields: [sectorId], references: [id])
-  sectorId    Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            Int       @id @default(autoincrement())
+  title         String
+  video         String?   @db.LongText
+  description   String    @db.LongText
+  user          User      @relation(fields: [userId], references: [id])
+  userId        Int
+  sector        Sector    @relation(fields: [sectorId], references: [id])
+  sectorId      Int
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+  deletedAtUser String?
 
   @@index([id])
   @@map("publications")

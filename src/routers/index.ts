@@ -14,20 +14,18 @@ routes.post("/v1/access", UserController.access)
 
 
 // module times
-
 routes.get("/v1/times", TimeController.all)
 routes.get("/v1/times/:id", TimeController.getById)
 routes.post("/v1/times", ensureAuthentication, ensurePermission(["PERMISSION_ADMIN", "PERMISSION_USER"]), TimeController.create)
 routes.patch("/v1/times/:id", ensureAuthentication, ensurePermission(["PERMISSION_ADMIN", "PERMISSION_USER"]), TimeController.update)
-routes.delete("/v1/times/:id", ensureAuthentication, ensurePermission(["PERMISSION_ADMIN", "PERMISSION_USER"]), TimeController.destroy)
+routes.delete("/v1/times/:id", ensureAuthentication, ensurePermission(["PERMISSION_ADMIN"]), TimeController.destroy)
 
 
 // module sectors
-
 routes.get("/v1/sectors", SectorController.all)
 routes.get("/v1/sectors/:id", SectorController.getById)
-routes.post("/v1/sectors", SectorController.create)
-routes.patch("/v1/sectors/:id", SectorController.update)
+routes.post("/v1/sectors", ensureAuthentication, ensurePermission(["PERMISSION_ADMIN", "PERMISSION_USER"]), SectorController.create)
+routes.patch("/v1/sectors/:id", ensureAuthentication, ensurePermission(["PERMISSION_ADMIN", "PERMISSION_USER"]), SectorController.update)
 
 
 // module publications
