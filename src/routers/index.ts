@@ -34,4 +34,6 @@ routes.get("/v1/publications/:id", PublicationController.getById)
 routes.post("/v1/publications", ensureAuthentication, ensurePermission(["PERMISSION_ADMIN", "PERMISSION_USER"]), PublicationController.create)
 routes.patch("/v1/publications/:_id", ensureAuthentication, ensurePermission(["PERMISSION_ADMIN", "PERMISSION_USER"]), PublicationController.update)
 
+routes.delete("/v1/publications/:_id", ensureAuthentication, ensurePermission(["PERMISSION_ADMIN", "PERMISSION_USER"]), PublicationController.destroy)
+
 export { routes };

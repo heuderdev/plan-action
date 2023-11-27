@@ -4,12 +4,18 @@ import { AppError } from "../utils/AppError";
 import { validatorObject } from "../utils/yup/location.validation";
 import { PublicationCreateValidation } from "./validations/PublicationCreateValidation";
 import { IPublicationUpdateInterface } from "./interfaces/IPublicationUpdateInterface";
+import { IPublicationDestroyInterface } from "./interfaces/IPublicationDestroyInterface";
 
 
 
 export class PublicationService {
     static async all() {
         return await prismaDatabase.publication.findMany({
+            where: {
+                deletedAt: {
+                    equals: null
+                }
+            },
             include: {
                 sector: {
                     include: {
@@ -87,6 +93,38 @@ export class PublicationService {
             })
 
             return publicationUpdate;
+        } catch (error) {
+            // @ts-ignore
+            throw new AppError(String(error.message));
+        }
+    }
+
+    static async destroy(data: IPublicationDestroyInterface) {
+
+        try {
+
+            const publication = await prismaDatabase.publication.findUnique({
+                where: {
+                    id: data.id,
+                    AND: {
+                        deletedAt: {
+                            equals: null
+                        }
+                    }
+                }
+            })    
+            
+
+            if (publication?.id) {
+                return await prismaDatabase.publication.update({
+                    where: { id: data.id, AND: { deletedAt: { equals: null } } }, data: {
+                        deletedAt: data.deletedAt,
+                        deletedAtUser: data.deletedAtUser
+                    }
+                })
+            } else {
+                throw new AppError("Publication already not exists in the database");
+            }
         } catch (error) {
             // @ts-ignore
             throw new AppError(String(error.message));

@@ -45,4 +45,19 @@ export class PublicationController {
             return response.status(400).json(error)
         }
     }
+
+    static async destroy(request: Request, response: Response) {
+        try {        
+
+            const data = {
+                deletedAt: new Date(),
+                deletedAtUser: request.user.username,
+                id: Number(request.params._id)
+            }
+            const publication = await PublicationService.destroy(data)
+            return response.status(201).json()
+        } catch (error) {
+            return response.status(400).json(error)
+        }
+    }
 }
